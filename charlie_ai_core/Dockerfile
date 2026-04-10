@@ -1,25 +1,15 @@
-# Використовуємо легкий офіційний образ Python
 FROM python:3.11-slim
 
-# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Змінні середовища для оптимізації Python
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+RUN pip install uv
 
-# Встановлюємо Poetry
-RUN pip install --no-cache-dir poetry==1.7.1
+COPY pyproject.toml ./
 
-# Копіюємо файли залежностей
-COPY pyproject.toml poetry.lock* ./
+RUN uv pip install --system -r pyproject.toml
 
-# Налаштовуємо Poetry: не створювати virtualenv, оскільки контейнер вже ізольований
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --no-root
-
-# Копіюємо весь код проєкту
 COPY . .
 
-# Команда для запуску FastAPI
+EXPOSE 8000
+
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

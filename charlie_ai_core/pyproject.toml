@@ -1,29 +1,12 @@
-[tool.poetry]
-name = "charlie-ai-core"
+[project]
+name = "charlie-ai"
 version = "0.1.0"
-description = "Core backend for Charlie AI English teacher (Test Task)"
-authors = ["Nazar Melnychuk <nazary163618@gmail.com>"]
+description = "English teacher AI for kids"
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-fastapi = "^0.110.0"
-uvicorn = {extras = ["standard"], version = "^0.28.0"}
-pydantic = "^2.6.0"
-pydantic-settings = "^2.2.0"  
-groq = "^0.4.2"               
-redis = "^5.0.3"
-httpx = "0.27.2"              
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"             
-black = "^24.3.0"
-pytest-asyncio = "^0.23.6"  # Для асинхронних тестів
-httpx = "^0.27.0"           # Для TestClient
-
-
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn>=0.27.0",
+    "pydantic-settings>=2.1.0",
+    "groq>=0.4.2"
+]

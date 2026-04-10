@@ -1,34 +1,29 @@
-# 🦊 Charlie AI - English Teacher Core
+#  Charlie AI - English Teacher for Kids
 
-This is the core backend service for **Charlie AI**, an animated fox that teaches English to kids (4-8 years old). Built with FastAPI, Redis, and Groq (Llama 3.1).
+A core backend service for an interactive English lesson flow, powered by AI. Charlie is an 8-year-old fox from London who guides kids (ages 4-8) through a vocabulary mini-lesson.
 
-## 🚀 Architecture & Approach
+## Architecture & Technical Decisions
 
-As requested in the test task, this core handles the lesson flow and LLM character generation without the voice part.
+Working with kids requires strict control over the educational flow. A pure LLM agent approach is prone to hallucinations, skipping logic, or discussing off-topic subjects indefinitely. 
 
-1. **Lesson Flow Management (State Machine):**
-   - The flow is managed by an `Orchestrator` service. 
-   - State (`GREETING` -> `LEARNING` -> `FAREWELL`) and user progress (current word, mistake count) are temporarily stored in **Redis**. 
-   - This ensures the API remains stateless, scalable, and memory-efficient.
+To solve this, this API service uses a **Hybrid FSM + Two-Step LLM Pipeline**:
 
-2. **LLM Integration (Groq):**
-   - Used **Groq** for ultra-low latency (crucial for voice AI).
-   - **Prompt Engineering:** Instead of letting the LLM talk freely, I enforce a strict JSON output using Pydantic templates. The LLM must generate an `internal_thought` (Chain-of-Thought) before responding, which drastically reduces hallucinations and improves logic.
+1. **Finite State Machine (FSM):** The lesson logic (`engine.py`) is rigidly controlled by Python code (e.g., GREETING -> LEARNING). This guarantees the lesson never derails and frontend animations remain predictable.
+2. **Two-Step LLM Pipeline (`llm_client.py` & `prompts.py`):**
+   * **Agent 1: Evaluator (JSON Mode):** Analyzes the child's raw input and categorizes intent (`correct`, `incorrect`, `silence`, etc.). This acts as a strict, unemotional logic gate.
+   * **Agent 2: Persona Generator:** Receives the evaluated intent and the target word to generate an empathetic, context-aware, and character-accurate response (strictly text, no emojis). 
 
-3. **Handling Real-World Situations (Edge Cases):**
-   - *Silence / "I don't know":* The system prompt instructs Charlie to give hints (e.g., animal sounds) instead of giving the answer directly.
-   - *Off-topic:* The LLM uses the context to gently guide the child back to the current target word.
-   - *Partial answers:* The prompt allows minor typos (like "ca" for "cat") to avoid discouraging the child.
-   - *API Failure:* Implemented a fallback response (`try/except` in `llm_client.py`) so if the Groq API fails, Charlie naturally asks the child to repeat the phrase.
+## Quick Start
 
-## 🛠 Prerequisites
+This project is built with **FastAPI** and uses **uv** for lightning-fast dependency management inside a highly optimized **Docker** container. It works seamlessly across all platforms.
 
-- Docker and Docker Compose
-- Groq API Key (Get it free at [console.groq.com](https://console.groq.com/))
+### Prerequisites
+* Docker & Docker Compose installed
+* A Groq API Key
 
-## ⚙️ How to Run
+### Installation & Setup
 
-1. Clone the repository.
-2. Rename `.env.example` to `.env` and insert your API key:
-   ```env
-   GROQ_API_KEY="gsk_your_key_here"
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd charlie_ai

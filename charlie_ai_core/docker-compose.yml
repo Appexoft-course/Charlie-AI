@@ -2,34 +2,11 @@ version: '3.8'
 
 services:
   web:
-    build: 
-      context: .
-      dockerfile: Dockerfile
-    container_name: charlie_ai_backend
+    build: .
     ports:
       - "8000:8000"
-    env_file:
-      - .env
-    
     volumes:
       - .:/app
-    
-    depends_on:
-      - redis
-    
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     environment:
-      - REDIS_URL=redis://redis:6379/0
-
-  redis:
-    image: redis:alpine
-    container_name: charlie_ai_redis
-    ports:
-      - "6379:6379"
-    
-    volumes:
-      - redis_data:/data
-    command: redis-server --save 60 1 --loglevel warning
-
-volumes:
-  redis_data:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
