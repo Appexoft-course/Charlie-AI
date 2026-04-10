@@ -1,7 +1,7 @@
 import logging
-from app.core.models import SessionState
-from app.core.prompts import get_evaluator_prompt, get_persona_prompt
-from app.core.llm_client import analyze_intent_with_llm, generate_speech_with_llm
+from core.models import SessionState
+from core.prompts import get_evaluator_prompt, get_persona_prompt
+from core.llm_client import analyze_intent_with_llm, generate_speech_with_llm
 
 # Configure standard Python logging
 logging.basicConfig(level=logging.INFO)

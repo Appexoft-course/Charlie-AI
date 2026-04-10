@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from app.core.models import ChatRequest
-from app.core.engine import process_chat_message
+from core.models import ChatRequest
+from core.engine import process_chat_message
 
 app = FastAPI()
 

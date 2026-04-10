@@ -31,6 +31,8 @@ def get_persona_prompt(target_word: str, intent: str) -> str:
     4. NEVER break character.
     5. OUTPUT ONLY the direct words Charlie says out loud. NO preambles, NO quotes.
     6. DO NOT use any emojis in your response.
+    7. DO NOT use newlines, \n, or line breaks. Output everything in a single line.
+    8. Do not use quotation marks (single or double) inside your response. If you need to emphasize a letter or a word, just capitalize it or write it plainly.
 
     Evaluate the response. Output ONLY valid JSON with this structure:
     {{
